@@ -394,9 +394,9 @@ PlayState.prototype.enter = function(game) {
   this.bombMinVelocity = this.config.bombMinVelocity + (levelMultiplier * this.config.bombMinVelocity);
   this.bombMaxVelocity = this.config.bombMaxVelocity + (levelMultiplier * this.config.bombMaxVelocity);
   if (enemi[random] == 'parasite' && this.level > 4) {
-  this.rocketMaxFireRate = (this.config.rocketMaxFireRate + 0. * limitLevel) * 0.5;
+  this.rocketMaxFireRate = (this.config.rocketMaxFireRate + 0. * limitLevel) * 0.7;
   } else if (this.level == 4) {
-    this.rocketMaxFireRate = (this.config.rocketMaxFireRate + 0.4 * limitLevel) * 0.5;
+    this.rocketMaxFireRate = (this.config.rocketMaxFireRate + 0.4 * limitLevel) * 0.7;
   } else {
     this.rocketMaxFireRate = this.config.rocketMaxFireRate + 0.4 * limitLevel;
   }
