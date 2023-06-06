@@ -775,7 +775,7 @@ LevelIntroState.prototype.update = function(game, dt) {
 
   //  Update the countdown.
   if (this.countdown === undefined) {
-    if (this.level < 5) this.countdown = 2; // start from 15 secs
+    if (this.level < 5) this.countdown = 15; // start from 15 secs
     else this.countdown = 3; // countdown from 3 secs
   }
   this.countdown -= dt;
@@ -1038,6 +1038,5 @@ Player image
 
 
 Added a double asterisk next to each one that I think is gonna be hard to do  
-
 
 */
