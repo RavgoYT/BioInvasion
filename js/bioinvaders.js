@@ -394,10 +394,9 @@ PlayState.prototype.enter = function(game) {
   this.bombMinVelocity = this.config.bombMinVelocity + (levelMultiplier * this.config.bombMinVelocity);
   this.bombMaxVelocity = this.config.bombMaxVelocity + (levelMultiplier * this.config.bombMaxVelocity);
   if (enemi[random] == 'parasite' && this.level > 4) {
-  console.dir('is it a parasite?!?')
-  this.rocketMaxFireRate = this.config.rocketMaxFireRate - 0.4 * limitLevel;
+  this.rocketMaxFireRate = (this.config.rocketMaxFireRate + 0. * limitLevel) * 0.5;
   } else if (this.level == 4) {
-    this.rocketMaxFireRate = this.config.rocketMaxFireRate - 0.4 * limitLevel;
+    this.rocketMaxFireRate = (this.config.rocketMaxFireRate + 0.4 * limitLevel) * 0.5;
   } else {
     this.rocketMaxFireRate = this.config.rocketMaxFireRate + 0.4 * limitLevel;
   }
@@ -775,7 +774,7 @@ LevelIntroState.prototype.update = function(game, dt) {
 
   //  Update the countdown.
   if (this.countdown === undefined) {
-    if (this.level < 5) this.countdown = 15; // start from 15 secs
+    if (this.level < 5) this.countdown = 2; // start from 15 secs
     else this.countdown = 3; // countdown from 3 secs
   }
   this.countdown -= dt;
