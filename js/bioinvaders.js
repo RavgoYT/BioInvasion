@@ -26,6 +26,23 @@ var KEY_LEFT = 37;
 var KEY_RIGHT = 39;
 var KEY_SPACE = 32;
 
+let kills = 0;
+let powerups = [
+  "platelets",
+  "bacteriophage",
+  "lymphocytes",
+  "fever"
+]
+
+let fever = false
+let fevertime = 0
+let lymphocytes = false
+let lymphocytetime = 0
+let bacteriophage = false
+let bacteriophagetime = 0
+let platelets = false
+let plateletstime = 0
+
 //  Creates an instance of the Game class.
 function Game() {
 
@@ -36,17 +53,17 @@ function Game() {
     bombMaxVelocity: 50,
     invaderInitialVelocity: 25,
     invaderAcceleration: 0,
-    invaderDropDistance: 20,
+    invaderDropDistance: 15,
     rocketVelocity: 120,
-    rocketMaxFireRate: 2,
+    rocketMaxFireRate: 2.2,
     gameWidth: 400,
     gameHeight: 300,
     fps: 50,
     debugMode: false,
     invaderRanks: 4,
     invaderFiles: 8,
-    shipSpeed: 120,
-    levelDifficultyMultiplier: 0.3,
+    shipSpeed: 125,
+    levelDifficultyMultiplier: 0.25,
     pointsPerInvader: 5,
     limitLevelIncrease: 25
   };
@@ -160,7 +177,7 @@ function GameLoop(game) {
     //  Update if we have an update function. Also draw
     //  if we have a draw function.
     if (currentState.update) {
-      currentState.update(game, dt);
+      currentState.update(game, dt, ctx);
     }
     if (currentState.draw) {
       currentState.draw(game, dt, ctx);
@@ -252,7 +269,17 @@ bacteriapng.src = "https://media.discordapp.net/attachments/888147901652545556/1
 var fungipng = new Image();
 fungipng.src = "https://media.discordapp.net/attachments/888147901652545556/1114745246379671632/fungi.png?width=588&height=588"
 var parasitepng = new Image();
-parasitepng.src = "https://media.discordapp.net/attachments/888147901652545556/1114745246627147776/parasite.png?width=588&height=588"
+parasitepng.src = "https://media.discordapp.net/attachments/888147901652545556/1115794974504669324/parasite.png?width=588&height=588"
+var plateletsImage = new Image();
+plateletsImage.src = "https://media.discordapp.net/attachments/888147901652545556/1114750556221734983/platelets.png?width=588&height=588"
+var bacteriaImage = new Image();
+bacteriaImage.src = "https://media.discordapp.net/attachments/888147901652545556/1114750554598539305/bacteriophage.png?width=588&height=588"
+var feverImage = new Image();
+feverImage.src = 'https://media.discordapp.net/attachments/888147901652545556/1114750555668107294/fever.png?width=588&height=588'
+var lymphocytesImage = new Image();
+lymphocytesImage.src = "https://media.discordapp.net/attachments/888147901652545556/1114750555961700453/lymphocytes.png?width=588&height=588"
+var playerImage = new Image();
+playerImage.src = 'https://media.discordapp.net/attachments/888147901652545556/1115794974806646885/humsn.png?width=588&height=588'
 
 let enemies = {
   "virus": viruspng,
@@ -266,7 +293,15 @@ let enemi = [
   'fungi',
   'parasite'
 ]
+function fadeAndDrawImage(ctx, image, x, y, w, h) {
+  var canvas = ctx.canvas;
+  canvas.style.opacity = 0;
 
+  setTimeout(function() {
+    canvas.style.opacity = 1;
+    ctx.drawImage(image, x, y, w, h);
+  }, 0);
+}
 // defining that random num
 let random = 0;
 WelcomeState.prototype.enter = function(game) {
@@ -289,12 +324,12 @@ WelcomeState.prototype.draw = function(game, dt, ctx) {
   //  Clear the background.
   ctx.clearRect(0, 0, game.width, game.height);
 
-  ctx.font = "30px Arial";
+  ctx.font = "30px Comic Sans MS";
   ctx.fillStyle = '#000000';
   ctx.textBaseline = "middle";
   ctx.textAlign = "center";
   ctx.fillText("BioInvasion", game.width / 2, game.height / 2 - 40);
-  ctx.font = "16px Arial";
+  ctx.font = "16px Comic Sans MS";
   ctx.drawImage(Titleimage, game.width / 2 - 150, game.height / 2 - 80, 75, 75);
 
   ctx.fillText("Press 'Space' or touch to start :D", game.width / 2, game.height / 2);
@@ -323,14 +358,14 @@ GameOverState.prototype.draw = function(game, dt, ctx) {
   //  Clear the background.
   ctx.clearRect(0, 0, game.width, game.height);
 
-  ctx.font = "30px Arial";
+  ctx.font = "30px Comic Sans MS";
   ctx.fillStyle = '#000000';
   ctx.textBaseline = "center";
   ctx.textAlign = "center";
   ctx.fillText("Game Over!", game.width / 2, game.height / 2 - 40);
-  ctx.font = "16px Arial";
+  ctx.font = "16px Comic Sans MS";
   ctx.fillText("You scored " + game.score + " and got to level " + game.level, game.width / 2, game.height / 2);
-  ctx.font = "16px Arial";
+  ctx.font = "16px Comic Sans MS";
   ctx.fillText("Press 'Space' to play again.", game.width / 2, game.height / 2 + 40);
 };
 
@@ -391,14 +426,21 @@ PlayState.prototype.enter = function(game) {
   uhh actually they'll just get harder and harder fr
   */
 
-  this.bombMinVelocity = this.config.bombMinVelocity + (levelMultiplier * this.config.bombMinVelocity);
-  this.bombMaxVelocity = this.config.bombMaxVelocity + (levelMultiplier * this.config.bombMaxVelocity);
+
+  if (fever != true) {
+    this.bombMinVelocity = this.config.bombMinVelocity + (levelMultiplier * this.config.bombMinVelocity);
+    this.bombMaxVelocity = this.config.bombMaxVelocity + (levelMultiplier * this.config.bombMaxVelocity);
+  } else {
+    this.bombMinVelocity = (this.config.bombMinVelocity + (levelMultiplier * this.config.bombMinVelocity)) * 0.6;
+    this.bombMaxVelocity = (this.config.bombMaxVelocity + (levelMultiplier * this.config.bombMaxVelocity)) * 0.6;
+  }
   if (enemi[random] == 'parasite' && this.level > 4) {
   this.rocketMaxFireRate = (this.config.rocketMaxFireRate + 0. * limitLevel) * 0.7;
   } else if (this.level == 4) {
     this.rocketMaxFireRate = (this.config.rocketMaxFireRate + 0.4 * limitLevel) * 0.7;
   } else {
-    this.rocketMaxFireRate = this.config.rocketMaxFireRate + 0.4 * limitLevel;
+    if (lymphocytes != true) this.rocketMaxFireRate = this.config.rocketMaxFireRate + 0.4 * limitLevel;
+    else this.rocketMaxFireRate = (this.config.rocketMaxFireRate + 0.4 * limitLevel) * 1.5;
   }
 
   //  Create the invaders.
@@ -419,7 +461,7 @@ PlayState.prototype.enter = function(game) {
   this.invaderNextVelocity = null;
 };
 
-PlayState.prototype.update = function(game, dt) {
+PlayState.prototype.update = function(game, dt, ctx) {
 
   //  If the left or right arrow keys are pressed, move
   //  the ship. Check this on ticks rather than via a keydown
@@ -446,7 +488,8 @@ PlayState.prototype.update = function(game, dt) {
   //  Move each bomb.
   for (var i = 0; i < this.bombs.length; i++) {
     var bomb = this.bombs[i];
-    bomb.y += dt * bomb.velocity;
+    if (fever == true) bomb.y += dt * (bomb.velocity / 2);
+    else bomb.y += dt * bomb.velocity;
 
     //  If the rocket has gone off the screen remove it.
     if (bomb.y > this.height) {
@@ -554,6 +597,17 @@ PlayState.prototype.update = function(game, dt) {
     }
     if (bang) {
       this.invaders.splice(i--, 1);
+      kills++
+      if (kills >= 25) // choose a random powerup
+      {
+        let chosen = powerups[Math.floor(Math.random() * powerups.length)]
+        if (chosen == 'fever') fever = true
+        else if (chosen == 'lymphocytes') lymphocytes = true
+        else if (chosen == 'bacteriophage') bacteriophage = true
+        else if (chosen == 'platelets') platelets = true
+
+        kills = 0
+      }
       game.sounds.playSound('bang');
     }
   }
@@ -618,6 +672,10 @@ PlayState.prototype.update = function(game, dt) {
     game.level += 1;
     game.moveToState(new LevelIntroState(game.level));
   }
+  console.dir("Fever:" + fever)
+  console.dir("Lymphocytes:" + lymphocytes)
+  console.dir("Bacteriophage:" + bacteriophage)
+  console.dir("Platelets:" + platelets)
 };
 
 PlayState.prototype.draw = function(game, dt, ctx) {
@@ -627,7 +685,7 @@ PlayState.prototype.draw = function(game, dt, ctx) {
 
   //  Draw ship.
   ctx.fillStyle = '#000000';
-  ctx.fillRect(this.ship.x - (this.ship.width / 2), this.ship.y - (this.ship.height / 2), this.ship.width, this.ship.height);
+  ctx.drawImage(playerImage, this.ship.x - (this.ship.width / 2), this.ship.y - (this.ship.height / 2), this.ship.width * 1.85, this.ship.height * 1.85);
 
   //  Draw invaders.
   let colors = [
@@ -656,27 +714,38 @@ PlayState.prototype.draw = function(game, dt, ctx) {
     
     //ctx.fillRect(invader.x - invader.width / 2, invader.y - invader.height / 2, invader.width, invader.height);
   }
-  invader.enemy = enemi[random]
 
-  //  Draw bombs.
+  //  Draw bombs. ENEMY DARTS
   //ctx.fillStyle = '#00FF00';
   if (this.level < 5) ctx.fillStyle = colors[this.level - 1];
   else ctx.fillStyle = colors[random];
   for (var i = 0; i < this.bombs.length; i++) {
     var bomb = this.bombs[i];
+    if (fever != true) {
     ctx.fillRect(bomb.x - 2, bomb.y - 2, 4, 8);
+    } else {
+      ctx.fillRect(bomb.x - 2, bomb.y - 2, 4, 4);
+    }
   }
 
-  //  Draw rockets.
-  ctx.fillStyle = '#00FF00'; 
+  //  Draw rockets. YOUR DARTS
+  ctx.fillStyle = '#FFEA00'; 
+  ctx.strokeStyle = '#000000'
+  ctx.lineWidth = 1;
   for (var i = 0; i < this.rockets.length; i++) {
     var rocket = this.rockets[i];
+    if (lymphocytes != true) { 
     ctx.fillRect(rocket.x, rocket.y - 2, 4, 4);
+    ctx.strokeRect(rocket.x, rocket.y - 2, 4, 4);
+    } else {
+      ctx.fillRect(rocket.x, rocket.y - 2, 6, 8);
+      ctx.strokeRect(rocket.x, rocket.y - 2, 6, 8);
+    }
   }
 
   //  Draw info.
   var textYpos = game.gameBounds.bottom + ((game.height - game.gameBounds.bottom) / 2) + 14 / 2;
-  ctx.font = "14px Arial";
+  ctx.font = "14px Comic Sans MS";
   ctx.fillStyle = '#000000';
   var info = "Lives: " + game.lives;
   ctx.textAlign = "left";
@@ -684,6 +753,69 @@ PlayState.prototype.draw = function(game, dt, ctx) {
   info = "Score: " + game.score + ", Level: " + game.level;
   ctx.textAlign = "right";
   ctx.fillText(info, game.gameBounds.right, textYpos);
+  
+  if (fever == true) {
+    ctx.drawImage(feverImage, game.gameBounds.right, textYpos - 50, 75, 75);
+    ctx.font = "16px Arial Black";
+    ctx.fillStyle = '#000000';
+    ctx.textBaseline = "middle";
+    ctx.textAlign = "center";
+    ctx.fillText("Powerup: Fevers reduce enemy dart size and speed!", game.width / 2, game.height / 2 + 180);
+    fevertime++
+    if (fevertime >= 50 * 10) {
+      fever = false
+      fevertime = 0
+    }
+  }
+  if (lymphocytes == true) {
+    ctx.drawImage(lymphocytesImage, game.gameBounds.right, textYpos - 50, 75, 75);
+    ctx.font = "16px Arial Black";
+    ctx.fillStyle = '#000000';
+    ctx.textBaseline = "middle";
+    ctx.textAlign = "center";
+    ctx.fillText("Powerup: Lymphocytes make your darts faster and bigger!", game.width / 2, game.height / 2 + 180);
+    lymphocytetime++
+    if (lymphocytetime >= 50 * 10) {
+      lymphocytes = false
+      lymphocytetime = 0
+    }
+  }
+  if (bacteriophage == true) {
+    if (this.level < 4) enemy = enemi[this.level - 1]
+    else enemy = enemi[random]
+    console.dir(enemy)
+    if (enemy == 'bacteria') {
+      ctx.drawImage(bacteriaImage, game.gameBounds.right, textYpos - 50, 75, 75);
+      ctx.font = "16px Arial Black";
+      ctx.fillStyle = '#000000';
+      ctx.textBaseline = "middle";
+      ctx.textAlign = "center";
+      ctx.fillText("Powerup: Bacteriophage eliminate all bacteria in sight!", game.width / 2, game.height / 2 + 180);
+      bacteriophagetime++
+      if (bacteriophagetime >= 50 * 3) { // waiting 3 seconds for dramatic effect
+        bacteriophage = false
+        bacteriophagetime = 0
+        game.level += 1;
+        game.moveToState(new LevelIntroState(game.level));
+      }
+    }
+  }
+  if (platelets == true) {
+    // load the image of the platelets in the bottom right corner, right above the score and level text
+    ctx.drawImage(plateletsImage, game.gameBounds.right, textYpos - 50, 75, 75);
+    ctx.font = "16px Arial Black";
+    ctx.fillStyle = '#000000';
+    ctx.textBaseline = "middle";
+    ctx.textAlign = "center";
+    ctx.fillText("Powerup: Platelets replenish your lives!", game.width / 2, game.height / 2 + 180);
+
+    plateletstime++
+    if (plateletstime >= 50 * 3) {
+      platelets = false
+      plateletstime = 0
+      game.lives = 3
+    }
+  }
 
   //  If we're in debug mode, draw bounds.
   if (this.config.debugMode) {
@@ -706,10 +838,14 @@ PlayState.prototype.keyDown = function(game, keyCode) {
     //  Push the pause state.
     game.pushState(new PauseState());
   }
-  if (keyCode == 87) {// w
-    game.level += 1;
-    game.moveToState(new LevelIntroState(game.level));
-  }
+  // if (keyCode == 87) {// w
+  //   game.level += 1;
+  //   game.moveToState(new LevelIntroState(game.level));
+    
+  // }
+  // if (keyCode == 83) {// s
+  //   lymphocytes = true
+  // }
 
 };
 
@@ -722,7 +858,8 @@ PlayState.prototype.fireRocket = function() {
   //  is older than the max rocket rate, we can fire.
   if (this.lastRocketTime === null || ((new Date()).valueOf() - this.lastRocketTime) > (1000 / this.rocketMaxFireRate)) {
     //  Add a rocket.
-    this.rockets.push(new Rocket(this.ship.x, this.ship.y - 12, this.config.rocketVelocity));
+    if (lymphocytes == true) this.rockets.push(new Rocket(this.ship.x, this.ship.y - 12, this.config.rocketVelocity * 2))
+    else this.rockets.push(new Rocket(this.ship.x, this.ship.y - 12, this.config.rocketVelocity));
     this.lastRocketTime = (new Date()).valueOf();
 
     //  Play the 'shoot' sound.
@@ -747,7 +884,7 @@ PauseState.prototype.draw = function(game, dt, ctx) {
   //  Clear the background.
   ctx.clearRect(0, 0, game.width, game.height);
 
-  ctx.font = "14px Arial";
+  ctx.font = "14px Comic Sans MS";
   ctx.fillStyle = '#000000';
   ctx.textBaseline = "middle";
   ctx.textAlign = "center";
@@ -774,7 +911,7 @@ LevelIntroState.prototype.update = function(game, dt) {
 
   //  Update the countdown.
   if (this.countdown === undefined) {
-    if (this.level < 5) this.countdown = 2; // start from 15 secs
+    if (this.level < 5) this.countdown = 15; // start from 15 secs
     else this.countdown = 3; // countdown from 3 secs
   }
   this.countdown -= dt;
@@ -792,7 +929,7 @@ LevelIntroState.prototype.draw = function(game, dt, ctx) {
   //  Clear the background.
   ctx.clearRect(0, 0, game.width, game.height);
 
-  ctx.font = "36px Arial";
+  ctx.font = "36px Comic Sans MS";
   ctx.fillStyle = '#000000';
   ctx.textBaseline = "middle";
   ctx.textAlign = "center";
@@ -804,12 +941,12 @@ LevelIntroState.prototype.draw = function(game, dt, ctx) {
     var y = game.height / 2 + 20;
     var lineheight = 20;
     var lines = txt.split('\n');
-    ctx.font = "12px Arial";
+    ctx.font = "bold 13px Comic Sans MS";
     for (var i = 0; i < lines.length; i++) {
       ctx.fillText(lines[i], x, y + (i * lineheight));
     }
     
-  ctx.font = "24px Arial";
+  ctx.font = "24px Comic Sans MS";
   ctx.fillText("Ready in " + this.countdownMessage, game.width / 2, game.height / 2 + 170);
   }
   else if (this.level == 2) {
@@ -819,12 +956,12 @@ LevelIntroState.prototype.draw = function(game, dt, ctx) {
     var y = game.height / 2 + 20;
     var lineheight = 20;
     var lines = txt.split('\n');
-    ctx.font = "12px Arial";
+    ctx.font = "bold 13px Comic Sans MS";
     for (var i = 0; i < lines.length; i++) {
       ctx.fillText(lines[i], x, y + (i * lineheight));
     }
     
-  ctx.font = "24px Arial";
+  ctx.font = "24px Comic Sans MS";
   ctx.fillText("Ready in " + this.countdownMessage, game.width / 2, game.height / 2 + 170);
   }
   else if (this.level == 3) {
@@ -834,12 +971,12 @@ LevelIntroState.prototype.draw = function(game, dt, ctx) {
     var y = game.height / 2 + 20;
     var lineheight = 20;
     var lines = txt.split('\n');
-    ctx.font = "12px Arial";
+    ctx.font = "bold 13px Comic Sans MS";
     for (var i = 0; i < lines.length; i++) {
       ctx.fillText(lines[i], x, y + (i * lineheight));
     }
     
-  ctx.font = "24px Arial";
+  ctx.font = "24px Comic Sans MS";
   ctx.fillText("Ready in " + this.countdownMessage, game.width / 2, game.height / 2 + 170);
   }
   else if (this.level == 4) {
@@ -849,26 +986,30 @@ LevelIntroState.prototype.draw = function(game, dt, ctx) {
     var y = game.height / 2 + 20;
     var lineheight = 20;
     var lines = txt.split('\n');
-    ctx.font = "12px Arial";
+    ctx.font = "bold 13px Comic Sans MS";
     for (var i = 0; i < lines.length; i++) {
       ctx.fillText(lines[i], x, y + (i * lineheight));
     }
     
-  ctx.font = "24px Arial";
+  ctx.font = "24px Comic Sans MS ";
   ctx.fillText("Ready in " + this.countdownMessage, game.width / 2, game.height / 2 + 170);
   }
-  else {
+  else if (this.level == 5){
     var txt = 'The levels here on out repeat with the same enemies introduced before. \nDifficulty will increase each level! \n\nGood luck!';
     var x = game.width / 2;
     var y = game.height / 2 - 30;
     var lineheight = 20;
     var lines = txt.split('\n');
-    ctx.font = "16px Arial";
+    ctx.font = "bold 16px Comic Sans MS";
     for (var i = 0; i < lines.length; i++) {
       ctx.fillText(lines[i], x, y + (i * lineheight));
   }
-  ctx.font = "24px Arial";
+  ctx.font = "24px Comic Sans MS";
   ctx.fillText("Ready in " + this.countdownMessage, game.width / 2, game.height / 2 + 70);
+
+  } else {
+    ctx.font = "24px Comic Sans MS";
+    ctx.fillText("Ready in " + this.countdownMessage, game.width / 2, game.height / 2 + 70);
   }
   return;
 };
@@ -1021,21 +1162,7 @@ Sounds.prototype.playSound = function(name) {
 
 To do:
 
-Powerups: (ones that I can't do have an X)
 
-Bacteriophage
-Macrophage (X)
-Fever 
-Lymphocytes (possibly X)
-Platelets
-
-Create source sheet (can just link to our brainstorming google doc) <-- obv prettifying it
-
-Decide on a better font
-Might want a new image for parasites, they look kinda uhhh rn
-Player image
-
-
-Added a double asterisk next to each one that I think is gonna be hard to do  
+Link to source sheet
 
 */
