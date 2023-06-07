@@ -31,3 +31,8 @@ a:focus {
   color: #005580;
   text-decoration: underline;
 }
+
+/* Additional CSS for fade-in animation */
+#gameCanvas {
+  transition: opacity 1s;
+}
