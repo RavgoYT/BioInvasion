@@ -797,6 +797,7 @@ PlayState.prototype.draw = function(game, dt, ctx) {
         bacteriophagetime = 0
         game.level += 1;
         game.moveToState(new LevelIntroState(game.level));
+        game.score = game.score + 200
       }
     } else bacteriophage = false
   }
