@@ -843,9 +843,9 @@ PlayState.prototype.keyDown = function(game, keyCode) {
   //   game.moveToState(new LevelIntroState(game.level));
     
   // }
-  // if (keyCode == 83) {// s
-  //   lymphocytes = true
-  // }
+  if (keyCode == 83) {// s
+    bacteriophage = true
+  }
 
 };
 
