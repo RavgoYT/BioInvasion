@@ -798,7 +798,7 @@ PlayState.prototype.draw = function(game, dt, ctx) {
         game.level += 1;
         game.moveToState(new LevelIntroState(game.level));
       }
-    }
+    } else bacteriophage = false
   }
   if (platelets == true) {
     // load the image of the platelets in the bottom right corner, right above the score and level text
