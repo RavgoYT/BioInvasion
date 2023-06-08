@@ -867,11 +867,11 @@ PlayState.prototype.keyDown = function(game, keyCode) {
     //  Push the pause state.
     game.pushState(new PauseState());
   }
-  // if (keyCode == 87) {// w
-  //   game.level += 1;
-  //   game.moveToState(new LevelIntroState(game.level));
+  if (keyCode == 87) {// w
+    game.level += 1;
+    game.moveToState(new LevelIntroState(game.level));
     
-  // }
+  }
 //   if (keyCode == 83) {// s
 //     bacteriophage = true
 //   }
@@ -957,6 +957,7 @@ LevelIntroState.prototype.draw = function(game, dt, ctx) {
 
   //  Clear the background.
   ctx.clearRect(0, 0, game.width, game.height);
+  let offset;
 
   ctx.font = "36px Comic Sans MS";
   ctx.fillStyle = '#000000';
@@ -1045,9 +1046,10 @@ LevelIntroState.prototype.draw = function(game, dt, ctx) {
     ctx.font = "bold 16px Comic Sans MS";
     for (var i = 0; i < lines.length; i++) {
       ctx.fillText(lines[i], x, y + (i * lineheight));
+      if (i+1 == lines.length) offset = i * lineheight
   }
     ctx.font = "24px Comic Sans MS";
-    ctx.fillText("Ready in " + this.countdownMessage, game.width / 2, game.height / 2 + 70);
+    ctx.fillText("Ready in " + this.countdownMessage, game.width / 2, game.height / 2 + offset + 30);
   }
   return;
 };
