@@ -263,9 +263,9 @@ function WelcomeState() {
 var Titleimage = new Image();
 Titleimage.src = "https://media.discordapp.net/attachments/888147901652545556/1114750554913124462/macrophage.png?width=588&height=588";
 var viruspng = new Image();
-viruspng.src = "https://media.discordapp.net/attachments/888147901652545556/1114745245876367400/bacteria.png?width=588&height=588";
 var bacteriapng = new Image();
-bacteriapng.src = "https://media.discordapp.net/attachments/888147901652545556/1114745246136418414/virus.png?width=588&height=588"
+bacteriapng.src = "https://media.discordapp.net/attachments/888147901652545556/1114745245876367400/bacteria.png?width=588&height=588";
+viruspng.src = "https://media.discordapp.net/attachments/888147901652545556/1114745246136418414/virus.png?width=588&height=588"
 var fungipng = new Image();
 fungipng.src = "https://media.discordapp.net/attachments/888147901652545556/1114745246379671632/fungi.png?width=588&height=588"
 var parasitepng = new Image();
@@ -293,6 +293,32 @@ let enemi = [
   'fungi',
   'parasite'
 ]
+
+let textLines = [
+
+"An example of a pathogenic virus would be the variola virus, causing smallpox, \nand is spread through human contact. The disease starts to run \nits course after incubation where rashes start showing on the mouth \nor throat which turn into sores. The sores turn into pustules which turn into \nscabs. The process takes a few weeks where symptoms start to subside once \nthe scabs fall off, but during this process the infected feels \nabsurd amounts of pain and fevers. Thankfully a vaccine was developed \nand the virus is now relatively eradicated.",
+
+  "One example of bacteria would be mycobacterium tuberculosis, which is a \nbacterial pathogen characterized by multiplying, usually leaving the \ninfected with a bad cough, chest pain, chills, fevers, and more \nas the bacteria usually infects the lungs. This way it can spread to its \nnext victim as it can be airborne and stay on various surfaces. \nIf left untreated, it can deal a fair amount of damage to whatever it infects. \nThere is a vaccine called BCG against tuberculosis and there are medicines to treat the pathogen.",
+
+  "A well known parasite are tapeworms, which are an \norganism that can cause the intestinal infection taeniasis \nif a person eats undercooked and infected pork that has tapeworm eggs. \nThis means that the tapeworm will develop and grow in the \nintestines where the infected will experience abdominal pain, nausea, \ndiarrhea, constipation, etc. The tapeworm can feed off the food that their host eats \nand their eggs can be seen in the host's feces.",
+
+  "Being a unique type of virus, bacteriophages target \nonly bacterial cells for replication, often very specialized only targeting a specific \nspecies or its strains. The usual bacteriophage is composed of a \nnucleic acid genome with a sheath and tail fibers. The tail fibers \nattach onto the bacteria's membrane, where a needle is inserted into the cell \nthrough the sheath, to give the cell its genetic material, where \neventually the bacterial cell will burst with newly created bacteriophages \nto prey on more bacterial cells.",
+
+  "Macrophages are a unique type of cell featured in a human's immune \nresponse, using its large size to ingest foreign objects and destroying \nthem in the process of phagocytosis. This allows the human to \ncome back to homeostasis in an event of harmful \norganisms that enter the body.",
+
+  "A fever is a type of immune response against harmful organisms \nwhere the human body increases its temperature temporarily \nfrom its average of 98.6 degrees Fahrenheit. Pathogens will \nbe able to work less efficiently in a fever's higher temperature, \nallowing the body to fight back despite not being in a homeostatic state.",
+
+  "There are two types of lymphocytes, B and T cells. T cell lymphocytes \ndirectly attack pathogens head on, while B cell lymphocytes \ncreate and release antibodies that recognize specific antigens \nto then bind and destroy them. These cells target the likes of bacteria, viruses, \ntoxins, and the sort.",
+
+  "Platelets are a more unique type of white \nblood cell, being smaller and fragmented. Made in \nour bone marrow and are used to prevent bleeding by \nclotting up to create temporary patches.",
+
+  "rav good programmer",
+
+
+  
+  
+
+]
 function fadeAndDrawImage(ctx, image, x, y, w, h) {
   var canvas = ctx.canvas;
   canvas.style.opacity = 0;
@@ -304,6 +330,7 @@ function fadeAndDrawImage(ctx, image, x, y, w, h) {
 }
 // defining that random num
 let random = 0;
+let random2 = 0;
 WelcomeState.prototype.enter = function(game) {
 
   // Create and load the sounds.
@@ -409,6 +436,7 @@ PlayState.prototype.enter = function(game) {
 
   //  Set the ship speed for this level, as well as invader params.
   random = Math.floor(Math.random() * 4);
+  random2 = Math.floor(Math.random() * textLines.length);
 
     var levelMultiplier = this.level * this.config.levelDifficultyMultiplier;
     var limitLevel = (this.level < this.config.limitLevelIncrease ? this.level : this.config.limitLevelIncrease);
@@ -913,7 +941,7 @@ LevelIntroState.prototype.update = function(game, dt) {
   //  Update the countdown.
   if (this.countdown === undefined) {
     if (this.level < 5) this.countdown = 15; // start from 15 secs
-    else this.countdown = 3; // countdown from 3 secs
+    else this.countdown = Math.max(3, Math.round(textLines[random2].trim().split(/\s+/).length / 8)); // countdown from math
   }
   this.countdown -= dt;
 
@@ -1009,6 +1037,15 @@ LevelIntroState.prototype.draw = function(game, dt, ctx) {
   ctx.fillText("Ready in " + this.countdownMessage, game.width / 2, game.height / 2 + 70);
 
   } else {
+    var txt = textLines[random2]
+    var x = game.width / 2;
+    var y = game.height / 2 - 30;
+    var lineheight = 20;
+    var lines = txt.split('\n');
+    ctx.font = "bold 16px Comic Sans MS";
+    for (var i = 0; i < lines.length; i++) {
+      ctx.fillText(lines[i], x, y + (i * lineheight));
+  }
     ctx.font = "24px Comic Sans MS";
     ctx.fillText("Ready in " + this.countdownMessage, game.width / 2, game.height / 2 + 70);
   }
