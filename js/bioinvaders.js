@@ -314,6 +314,10 @@ let textLines = [
 
   "rav good programmer",
 
+  "josh wrote all these",
+
+  "this game runs at 50 fps :O",
+
 
   
   
@@ -867,11 +871,11 @@ PlayState.prototype.keyDown = function(game, keyCode) {
     //  Push the pause state.
     game.pushState(new PauseState());
   }
-  if (keyCode == 87) {// w
-    game.level += 1;
-    game.moveToState(new LevelIntroState(game.level));
+  // if (keyCode == 87) {// w
+  //   game.level += 1;
+  //   game.moveToState(new LevelIntroState(game.level));
     
-  }
+  // }
 //   if (keyCode == 83) {// s
 //     bacteriophage = true
 //   }
