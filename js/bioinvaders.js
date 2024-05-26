@@ -34,6 +34,36 @@ let powerups = [
   "fever"
 ]
 
+let textLines = [
+
+  "An example of a pathogenic virus would be the variola virus, \ncausing smallpox, and is spread through human contact. The \ndisease starts to run its course after incubation where rashes \nstart showing on the mouth or throat which turn into sores. \nThe sores turn into pustules which turn into scabs. \nThe process takes a few weeks where symptoms start to subside once \nthe scabs fall off, but during this process the infected feels absurd \namounts of pain and fevers. Thankfully a vaccine was developed \nand the virus is now relatively eradicated.",
+  
+  "One example of bacteria would be mycobacterium tuberculosis, \nwhich is a bacterial pathogen characterized by multiplying, \nusually leaving the infected with a bad cough, \nchest pain, chills, fevers, and more as the bacteria usually \ninfects the lungs. This way it can spread to its next victim as it can be \nairborne and stay on various surfaces. If left untreated, \nit can deal a fair amount of damage to \nwhatever it infects. There is a vaccine called BCG against \ntuberculosis and there are medicines to treat the pathogen.",
+
+  "A well known parasite are tapeworms, which are an organism that \ncan cause the intestinal infection taeniasis if a person eats undercooked \nand infected pork that has tapeworm eggs. This means \nthat the tapeworm will develop and grow in the intestines where \nthe infected will experience abdominal pain, nausea, diarrhea, \nconstipation, etc. The tapeworm can feed off the food \nthat their host eats and their eggs can be seen in the host's feces.",
+
+  "Being a unique type of virus, bacteriophages target only bacterial cells for replication, \noften very specialized only targeting a specific species or its strains. The usual \nbacteriophage is composed of a nucleic acid genome with a sheath \nand tail fibers. The tail fibers attach onto the bacteria's \nmembrane, where a needle is inserted into the cell through the sheath, \nto give the cell its genetic material, where eventually the bacterial \ncell will burst with newly created bacteriophages to prey \non more bacterial cells.",
+  
+  "Macrophages are a unique type of cell featured in a human's \nimmune response, using its large size to ingest foreign objects and destroying them \nin the process of phagocytosis. This allows the human to come \nback to homeostasis in an event of harmful \norganisms that enter the body.",
+
+  "A fever is a type of immune response against harmful organisms where the human body \nincreases its temperature temporarily from its average of 98.6 degrees Fahrenheit. \nPathogens will be able to work less efficiently in a fever's higher temperature, \nallowing the body to fight back despite not being in a homeostatic state.",
+
+  "There are two types of lymphocytes, B and T cells. T cell lymphocytes directly attack \npathogens head on, while B cell lymphocytes create \nand release antibodies that recognize specific \nantigens to then bind and destroy them. These cells target the \nlikes of bacteria, viruses, toxins, and the sort.",
+
+  "Platelets are a more unique type of white blood cell, \nbeing smaller and fragmented. Made in our bone marrow and are \nused to prevent bleeding by clotting up to create temporary patches.",
+  
+  "rav good programmer",
+
+  "josh wrote all these",
+
+  "this game runs at 50 fps",
+
+  
+  ] 
+
+ let usedTextLines = []
+  
+
 let fever = false
 let fevertime = 0
 let lymphocytes = false
@@ -55,7 +85,7 @@ function Game() {
     invaderAcceleration: 0,
     invaderDropDistance: 15,
     rocketVelocity: 120,
-    rocketMaxFireRate: 2.2,
+    rocketMaxFireRate: 2.6,
     gameWidth: 400,
     gameHeight: 300,
     fps: 50,
@@ -261,25 +291,25 @@ function WelcomeState() {
 }
 
 var Titleimage = new Image();
-Titleimage.src = "https://media.discordapp.net/attachments/888147901652545556/1114750554913124462/macrophage.png?width=588&height=588";
+Titleimage.src = "assets/macrophage.png";
 var viruspng = new Image();
 var bacteriapng = new Image();
-bacteriapng.src = "https://media.discordapp.net/attachments/888147901652545556/1114745245876367400/bacteria.png?width=588&height=588";
-viruspng.src = "https://media.discordapp.net/attachments/888147901652545556/1114745246136418414/virus.png?width=588&height=588"
+bacteriapng.src = "assets/bacteria.png";
+viruspng.src = "assets/virus.png"
 var fungipng = new Image();
-fungipng.src = "https://media.discordapp.net/attachments/888147901652545556/1114745246379671632/fungi.png?width=588&height=588"
+fungipng.src = "assets/fungi.png"
 var parasitepng = new Image();
-parasitepng.src = "https://media.discordapp.net/attachments/888147901652545556/1115794974504669324/parasite.png?width=588&height=588"
+parasitepng.src = "assets/parasite.png"
 var plateletsImage = new Image();
-plateletsImage.src = "https://media.discordapp.net/attachments/888147901652545556/1114750556221734983/platelets.png?width=588&height=588"
+plateletsImage.src = "assets/platelets.png"
 var bacteriaImage = new Image();
-bacteriaImage.src = "https://media.discordapp.net/attachments/888147901652545556/1114750554598539305/bacteriophage.png?width=588&height=588"
+bacteriaImage.src = "assets/bacteriophage.png"
 var feverImage = new Image();
-feverImage.src = 'https://media.discordapp.net/attachments/888147901652545556/1114750555668107294/fever.png?width=588&height=588'
+feverImage.src = 'assets/fever.png'
 var lymphocytesImage = new Image();
-lymphocytesImage.src = "https://media.discordapp.net/attachments/888147901652545556/1114750555961700453/lymphocytes.png?width=588&height=588"
+lymphocytesImage.src = "assets/lymphocytes.png"
 var playerImage = new Image();
-playerImage.src = 'https://media.discordapp.net/attachments/888147901652545556/1115794974806646885/humsn.png?width=588&height=588'
+playerImage.src = 'assets/humsn.png'
 
 let enemies = {
   "virus": viruspng,
@@ -292,36 +322,6 @@ let enemi = [
   'bacteria',
   'fungi',
   'parasite'
-]
-
-let textLines = [
-
-"An example of a pathogenic virus would be the variola virus, causing smallpox, \nand is spread through human contact. The disease starts to run \nits course after incubation where rashes start showing on the mouth \nor throat which turn into sores. The sores turn into pustules which turn into \nscabs. The process takes a few weeks where symptoms start to subside once \nthe scabs fall off, but during this process the infected feels \nabsurd amounts of pain and fevers. Thankfully a vaccine was developed \nand the virus is now relatively eradicated.",
-
-  "One example of bacteria would be mycobacterium tuberculosis, which is a \nbacterial pathogen characterized by multiplying, usually leaving the \ninfected with a bad cough, chest pain, chills, fevers, and more \nas the bacteria usually infects the lungs. This way it can spread to its \nnext victim as it can be airborne and stay on various surfaces. \nIf left untreated, it can deal a fair amount of damage to whatever it infects. \nThere is a vaccine called BCG against tuberculosis and there are medicines to treat the pathogen.",
-
-  "A well known parasite are tapeworms, which are an \norganism that can cause the intestinal infection taeniasis \nif a person eats undercooked and infected pork that has tapeworm eggs. \nThis means that the tapeworm will develop and grow in the \nintestines where the infected will experience abdominal pain, nausea, \ndiarrhea, constipation, etc. The tapeworm can feed off the food that their host eats \nand their eggs can be seen in the host's feces.",
-
-  "Being a unique type of virus, bacteriophages target \nonly bacterial cells for replication, often very specialized only targeting a specific \nspecies or its strains. The usual bacteriophage is composed of a \nnucleic acid genome with a sheath and tail fibers. The tail fibers \nattach onto the bacteria's membrane, where a needle is inserted into the cell \nthrough the sheath, to give the cell its genetic material, where \neventually the bacterial cell will burst with newly created bacteriophages \nto prey on more bacterial cells.",
-
-  "Macrophages are a unique type of cell featured in a human's immune \nresponse, using its large size to ingest foreign objects and destroying \nthem in the process of phagocytosis. This allows the human to \ncome back to homeostasis in an event of harmful \norganisms that enter the body.",
-
-  "A fever is a type of immune response against harmful organisms \nwhere the human body increases its temperature temporarily \nfrom its average of 98.6 degrees Fahrenheit. Pathogens will \nbe able to work less efficiently in a fever's higher temperature, \nallowing the body to fight back despite not being in a homeostatic state.",
-
-  "There are two types of lymphocytes, B and T cells. T cell lymphocytes \ndirectly attack pathogens head on, while B cell lymphocytes \ncreate and release antibodies that recognize specific antigens \nto then bind and destroy them. These cells target the likes of bacteria, viruses, \ntoxins, and the sort.",
-
-  "Platelets are a more unique type of white \nblood cell, being smaller and fragmented. Made in \nour bone marrow and are used to prevent bleeding by \nclotting up to create temporary patches.",
-
-  "rav good programmer",
-
-  "josh wrote all these",
-
-  "this game runs at 50 fps :O",
-
-
-  
-  
-
 ]
 function fadeAndDrawImage(ctx, image, x, y, w, h) {
   var canvas = ctx.canvas;
@@ -467,7 +467,7 @@ PlayState.prototype.enter = function(game) {
     this.bombMaxVelocity = (this.config.bombMaxVelocity + (levelMultiplier * this.config.bombMaxVelocity)) * 0.6;
   }
   if (enemi[random] == 'parasite' && this.level > 4) {
-  this.rocketMaxFireRate = (this.config.rocketMaxFireRate + 0. * limitLevel) * 0.7;
+  this.rocketMaxFireRate = (this.config.rocketMaxFireRate + 0 * limitLevel) * 0.7;
   } else if (this.level == 4) {
     this.rocketMaxFireRate = (this.config.rocketMaxFireRate + 0.4 * limitLevel) * 0.7;
   } else {
@@ -945,7 +945,7 @@ LevelIntroState.prototype.update = function(game, dt) {
   //  Update the countdown.
   if (this.countdown === undefined) {
     if (this.level < 5) this.countdown = 15; // start from 15 secs
-    else this.countdown = Math.max(3, Math.round(textLines[random2].trim().split(/\s+/).length / 8)); // countdown from math
+    else this.countdown = Math.max(3, Math.round(textLines[random2].trim().split(/\s+/).length / 8)); // doing sum intense math here
   }
   this.countdown -= dt;
 
@@ -961,7 +961,6 @@ LevelIntroState.prototype.draw = function(game, dt, ctx) {
 
   //  Clear the background.
   ctx.clearRect(0, 0, game.width, game.height);
-  let offset;
 
   ctx.font = "36px Comic Sans MS";
   ctx.fillStyle = '#000000';
@@ -1042,6 +1041,7 @@ LevelIntroState.prototype.draw = function(game, dt, ctx) {
   ctx.fillText("Ready in " + this.countdownMessage, game.width / 2, game.height / 2 + 70);
 
   } else {
+    let offset;
     var txt = textLines[random2]
     var x = game.width / 2;
     var y = game.height / 2 - 30;
@@ -1050,10 +1050,12 @@ LevelIntroState.prototype.draw = function(game, dt, ctx) {
     ctx.font = "bold 16px Comic Sans MS";
     for (var i = 0; i < lines.length; i++) {
       ctx.fillText(lines[i], x, y + (i * lineheight));
-      if (i+1 == lines.length) offset = i * lineheight
-  }
+      if (i+1 == lines.length) {
+        offset = (i * lineheight) + 30
+      }
+    }
     ctx.font = "24px Comic Sans MS";
-    ctx.fillText("Ready in " + this.countdownMessage, game.width / 2, game.height / 2 + offset + 30);
+    ctx.fillText("Ready in " + this.countdownMessage, game.width / 2, game.height / 2 + offset);
   }
   return;
 };
